@@ -60,10 +60,55 @@ async function createDefaultAdmin() {
       console.log('User ID:', resultUser.insertId);
     }
 
+    // Create sample bookings after users are created
+    await createSampleBookings(pool);
+
     process.exit(0);
   } catch (error) {
     console.error('❌ Error creating default users:', error);
     process.exit(1);
+  }
+}
+
+async function createSampleBookings(pool) {
+  try {
+    // Check if sample bookings already exist
+    const [existingBookings] = await pool.execute('SELECT COUNT(*) as count FROM bookings');
+    
+    if (existingBookings[0].count > 0) {
+      console.log('Sample bookings already exist');
+      return;
+    }
+
+    // Get user IDs
+    const [adminUser] = await pool.execute('SELECT id FROM users WHERE email = ?', ['demo@admin.com']);
+    const [testUser] = await pool.execute('SELECT id FROM users WHERE email = ?', ['test@example.com']);
+
+    if (testUser.length > 0 && adminUser.length > 0) {
+      // Create sample bookings using test user
+      await pool.execute(
+        'INSERT INTO bookings (event_id, user_id, quantity, total_amount, status) VALUES (?, ?, ?, ?, ?)',
+        [1, testUser[0].id, 2, 5998.00, 'confirmed']
+      );
+      
+      await pool.execute(
+        'INSERT INTO bookings (event_id, user_id, quantity, total_amount, status) VALUES (?, ?, ?, ?, ?)',
+        [2, testUser[0].id, 1, 4999.00, 'confirmed']
+      );
+
+      // Update available seats based on bookings
+      await pool.execute(`
+        UPDATE events e SET available_seats = total_seats - (
+          SELECT COALESCE(SUM(quantity), 0) 
+          FROM bookings b 
+          WHERE b.event_id = e.id AND b.status = 'confirmed'
+        )
+      `);
+
+      console.log('✅ Sample bookings created successfully');
+    }
+  } catch (error) {
+    console.log('⚠️ Could not create sample bookings:', error.message);
   }
 }
 

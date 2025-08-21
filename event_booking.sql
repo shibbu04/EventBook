@@ -56,10 +56,6 @@ CREATE TABLE bookings (
     INDEX idx_booking_date (booking_date)
 );
 
--- Insert default admin user (password: Demo@admin - hashed)
-INSERT INTO users (name, email, password, role) VALUES
-('Admin User', 'demo@admin.com', '$2b$10$rHQKEOKOLdRZfOSZN3aThuF.FOfcj8ue9Kw9JHT8ZQn6bNrg.kE1a', 'admin');
-
 -- Insert sample events data with Indian Rupee prices
 INSERT INTO events (title, description, location, date, total_seats, available_seats, price, img) VALUES
 (
@@ -127,22 +123,6 @@ INSERT INTO events (title, description, location, date, total_seats, available_s
 CREATE INDEX idx_events_date_location ON events(date, location);
 CREATE INDEX idx_bookings_event_user ON bookings(event_id, user_id);
 
--- Sample user for testing (password: testuser123)
-INSERT INTO users (name, email, password, mobile, role) VALUES
-('Test User', 'test@example.com', '$2b$10$ZFRbNYI8vB.hVa1H9nqhJeD7WXmVLz4QJkx8GtQyNYl5Kq3dVWjO2', '+919876543210', 'user');
-
--- Sample booking data (updated to use user_id)
-INSERT INTO bookings (event_id, user_id, quantity, total_amount, status) VALUES
-(1, 2, 2, 5998.00, 'confirmed'),
-(2, 2, 1, 4999.00, 'confirmed');
-
--- Update available seats based on bookings
-UPDATE events e SET available_seats = total_seats - (
-    SELECT COALESCE(SUM(quantity), 0) 
-    FROM bookings b 
-    WHERE b.event_id = e.id AND b.status = 'confirmed'
-);
-
 -- Views for analytics (optional)
 CREATE VIEW event_statistics AS
 SELECT 
@@ -163,6 +143,5 @@ DESCRIBE users;
 DESCRIBE events;
 DESCRIBE bookings;
 
-UPDATE users SET password = '$2b$12$rHQKEOKOLdRZfOSZN3aThuF.FOfcj8ue9Kw9JHT8ZQn6bNrg.kE1a' WHERE email = 'demo@admin.com';
-
-UPDATE users SET password = '$2b$12$XBwJ9X1k5Zg3YNkZKQyE3.4oG7mV8J5xA9dF2gR4oL6pN8mK1sE7e' WHERE email = 'test@example.com';
+-- NOTE: To create admin and test users, run the createAdmin script:
+-- cd backend && node scripts/createAdmin.js

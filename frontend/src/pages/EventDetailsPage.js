@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { eventAPI, formatDate, formatCurrency, formatTime } from '../utils/api';
 import { useSocket } from '../context/SocketContext';
+import LoginModal from '../components/LoginModal';
 import toast from 'react-hot-toast';
 
 const EventDetailsPage = () => {
@@ -24,7 +25,24 @@ const EventDetailsPage = () => {
   const [loading, setLoading] = useState(true);
   const [ticketQuantity, setTicketQuantity] = useState(1);
   const [isFavorited, setIsFavorited] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [user, setUser] = useState(null);
   const { socket, lockSeats } = useSocket();
+
+  useEffect(() => {
+    // Check if user is logged in
+    const token = localStorage.getItem('auth_token');
+    const userData = localStorage.getItem('user_data');
+    if (token && userData) {
+      try {
+        setUser(JSON.parse(userData));
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('user_data');
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -75,6 +93,12 @@ const EventDetailsPage = () => {
   }, [socket, event]);
 
   const handleBookNow = () => {
+    // Check if user is logged in
+    if (!user) {
+      setShowLoginModal(true);
+      return;
+    }
+
     if (event.available_seats < ticketQuantity) {
       toast.error('Not enough seats available');
       return;
@@ -426,6 +450,13 @@ const EventDetailsPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Login Modal */}
+      <LoginModal 
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        eventTitle={event?.title || 'this event'}
+      />
     </div>
   );
 };

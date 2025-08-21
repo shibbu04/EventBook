@@ -238,10 +238,10 @@ const AdminDashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="flex justify-between items-start mb-8"
+          className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4 mb-8"
         >
-          <div>
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+          <div className="flex-1">
+            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-2">
               Admin Dashboard
             </h1>
             <p className="text-gray-600 dark:text-gray-300">
@@ -249,16 +249,16 @@ const AdminDashboard = () => {
             </p>
           </div>
 
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-3 bg-white dark:bg-dark-800 rounded-lg px-4 py-2 shadow-md">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <div className="flex items-center space-x-3 bg-white dark:bg-dark-800 rounded-lg px-4 py-2 shadow-md w-full sm:w-auto">
+              <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></div>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">
                 Admin: {user?.name}
               </span>
             </div>
             <button
               onClick={handleLogout}
-              className="flex items-center space-x-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors"
+              className="flex items-center justify-center space-x-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors w-full sm:w-auto"
             >
               <LogOut className="w-4 h-4" />
               <span>Logout</span>
@@ -330,10 +330,10 @@ const AdminDashboard = () => {
           className="bg-white dark:bg-dark-800 rounded-xl shadow-lg mb-8"
         >
           <div className="border-b border-gray-200 dark:border-dark-600">
-            <nav className="-mb-px flex">
+            <nav className="-mb-px flex flex-col sm:flex-row">
               <button
                 onClick={() => setActiveTab('events')}
-                className={`py-4 px-6 border-b-2 font-medium text-sm transition-colors ${
+                className={`py-4 px-6 border-b-2 font-medium text-sm transition-colors flex-1 text-center ${
                   activeTab === 'events'
                     ? 'border-primary-500 text-primary-600 dark:text-primary-400'
                     : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
@@ -343,7 +343,7 @@ const AdminDashboard = () => {
               </button>
               <button
                 onClick={() => setActiveTab('users')}
-                className={`py-4 px-6 border-b-2 font-medium text-sm transition-colors ${
+                className={`py-4 px-6 border-b-2 font-medium text-sm transition-colors flex-1 text-center ${
                   activeTab === 'users'
                     ? 'border-primary-500 text-primary-600 dark:text-primary-400'
                     : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
@@ -363,21 +363,21 @@ const AdminDashboard = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="bg-white dark:bg-dark-800 rounded-xl p-6 shadow-lg mb-8"
           >
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-              <div className="relative flex-1 max-w-md">
+            <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4">
+              <div className="relative flex-1 max-w-full lg:max-w-md">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
                   placeholder="Search events..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="input-field pl-10"
+                  className="input-field pl-10 w-full"
                 />
               </div>
               
               <button
                 onClick={() => openModal()}
-                className="btn-primary flex items-center space-x-2"
+                className="btn-primary flex items-center justify-center space-x-2 w-full lg:w-auto"
               >
                 <Plus className="w-5 h-5" />
                 <span>Add Event</span>
@@ -393,15 +393,15 @@ const AdminDashboard = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="bg-white dark:bg-dark-800 rounded-xl p-6 shadow-lg mb-8"
           >
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-              <div className="relative flex-1 max-w-md">
+            <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4">
+              <div className="relative flex-1 max-w-full lg:max-w-md">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
                   placeholder="Search users..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="input-field pl-10"
+                  className="input-field pl-10 w-full"
                 />
               </div>
             </div>

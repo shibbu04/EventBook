@@ -98,6 +98,17 @@ const BookingPage = () => {
     };
   }, [socket, seatLockId]);
 
+  // Prevent automatic scrolling on form interactions
+  useEffect(() => {
+    // Disable smooth scrolling to prevent automatic scroll to bottom
+    const originalScrollBehavior = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'auto';
+    
+    return () => {
+      document.documentElement.style.scrollBehavior = originalScrollBehavior;
+    };
+  }, []);
+
   const onSubmit = async (data) => {
     setSubmitting(true);
     
@@ -217,7 +228,10 @@ const BookingPage = () => {
               Booking Information
             </h2>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <form 
+              onSubmit={handleSubmit(onSubmit)} 
+              className="space-y-6"
+            >
               {/* Personal Information */}
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">

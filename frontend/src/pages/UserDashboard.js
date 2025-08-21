@@ -127,10 +127,10 @@ const UserDashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="flex justify-between items-start mb-8"
+          className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4 mb-8"
         >
-          <div>
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+          <div className="flex-1">
+            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-2">
               Welcome back, {user?.name}!
             </h1>
             <p className="text-gray-600 dark:text-gray-300">
@@ -138,16 +138,16 @@ const UserDashboard = () => {
             </p>
           </div>
 
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-3 bg-white dark:bg-dark-800 rounded-lg px-4 py-2 shadow-md">
-              <UserIcon className="w-5 h-5 text-gray-400" />
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <div className="flex items-center space-x-3 bg-white dark:bg-dark-800 rounded-lg px-4 py-2 shadow-md w-full sm:w-auto">
+              <UserIcon className="w-5 h-5 text-gray-400 flex-shrink-0" />
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">
                 {user?.email}
               </span>
             </div>
             <button
               onClick={handleLogout}
-              className="flex items-center space-x-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors"
+              className="flex items-center justify-center space-x-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors w-full sm:w-auto"
             >
               <LogOut className="w-4 h-4" />
               <span>Logout</span>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from './context/ThemeContext';
@@ -22,6 +22,32 @@ import UserDashboard from './pages/UserDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
+  useEffect(() => {
+    // Force clear old service worker cache on app start
+    const clearOldCache = async () => {
+      if ('serviceWorker' in navigator && 'caches' in window) {
+        try {
+          const cacheNames = await caches.keys();
+          const oldCaches = cacheNames.filter(name => 
+            name.includes('event-booking') && 
+            !name.includes('static-v1') && 
+            !name.includes('dynamic-v1')
+          );
+          
+          await Promise.all(oldCaches.map(cacheName => caches.delete(cacheName)));
+          
+          if (oldCaches.length > 0) {
+            console.log('Cleared old caches:', oldCaches);
+          }
+        } catch (error) {
+          console.log('Error clearing old cache:', error);
+        }
+      }
+    };
+    
+    clearOldCache();
+  }, []);
+
   return (
     <ThemeProvider>
       <SocketProvider>
